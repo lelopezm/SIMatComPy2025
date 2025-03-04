@@ -11,10 +11,10 @@ t0=0
 tf=2*np.pi
 
 #condición inicial
-x0=1
+x0=5
 
-#cantidad de puntos a graficas
-n=200
+#cantidad de puntos a graficar
+n=250
 
 #Solución aproximada 
 T=np.linspace(t0,tf,n)
@@ -28,3 +28,6 @@ plt.xlabel('t')
 plt.ylabel('x(t)')
 plt.title('Solución con ODEINT')
 plt.show()
+
+
+#VERIFICAR RESULTADOS, NO COINCIDEN

@@ -8,7 +8,7 @@ def f(x,t):
 
 #tiempo final y número de iteraciones 
 tf=1
-n=200
+n=4
 #condiciones iniciales
 t0=0
 x0=1
