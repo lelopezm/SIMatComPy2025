@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 
 #definimos f(t,x) de x'=f(t,x)
 def f(x,t):
-    return -t/x
+    return -t/x #-x + np.sin(t)
 
 #tiempo final y número de iteraciones 
-tf=1
-n=4
+tf=1 
+n=250
 #condiciones iniciales
 t0=0
 x0=1

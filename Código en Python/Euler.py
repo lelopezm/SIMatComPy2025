@@ -9,7 +9,7 @@ def f(t,x):
 t0=0
 tf=20
 x0=5
-n=2000 #cantidad de puntos
+n=20 #cantidad de puntos
 h=(tf-t0)/n
 #Vectores de la solución aproximada
 T=[t0]
