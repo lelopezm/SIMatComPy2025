@@ -4,7 +4,10 @@
 #el objetivo es hallar el valor de k (tasa de enfriamiento)
 #RESPUESTA: Aproximadamente el valor de k es -0.12
 
-
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import odeint
+
+#Importación de los datos
+datos = pd.read_excel('datos_temperatura.xlsx')
+print(datos)
