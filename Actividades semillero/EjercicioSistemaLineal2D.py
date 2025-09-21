@@ -3,19 +3,19 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
 #ventana
-ax=0
-bx=5
-ay=0
-by=6
+ax=-10
+bx=10
+ay=-5
+by=5
 
 #umbral
-w=3
+w=0
 
 # sistema 1 (inestable) ROJO matriz A
-a1 = 2
+a1 = 1
 b1 = -1
-c1 = 1
-d1 = 4
+c1 = 5
+d1 = -3
 
 # sistema 2 (estable) VERDE matriz B
 a2 = -1
