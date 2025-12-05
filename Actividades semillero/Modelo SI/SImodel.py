@@ -3,10 +3,10 @@ from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 
 #ventana
-ax=-0.1
-bx=1.1 
-ay=-0.1
-by=1.1
+ax=0
+bx=1 
+ay=0
+by=1
 
 #umbral
 w=0.3 # valor de ZETA
@@ -56,6 +56,20 @@ def calcular_L(x, w):
     l = componente_f1y * componente_f2y
     return l, componente_f1y, componente_f2y
 
+# EQUILIBRIO DE f1
+xe1 = 1/R0
+ye1 = mu*(R0 - 1)/((mu + theta)*R0)
+
+# EQUILIBRIO DE f2
+a=mu*R0
+b=-(mu+mu*R0-u*R0)
+c=mu
+discriminante=b**2-4*a*c
+if discriminante >= 0:
+    xe2_1 = (-b + np.sqrt(discriminante)) / (2*a)
+    xe2_2 = (-b - np.sqrt(discriminante)) / (2*a)
+    ye2_1 = (mu*(1 - xe2_1)-u)/(mu + theta)
+    ye2_2 = (mu*(1 - xe2_2)-u)/(mu + theta)
 # PUNTOS TANGENTES
 # T₁: donde f1_y(x,w) = 0
 t1x = 1/R0
@@ -342,7 +356,11 @@ plt.streamplot(X2, Y2, U2, V2, color='blue', linewidth=0.6, density=1.2)
 plt.plot([ax, t1x], [w, w], color='black', linestyle='--', linewidth=2)
 plt.plot([t1x, t2x], [w, w], color='black', linestyle='-', linewidth=2)
 plt.plot([t2x, bx], [w, w], color='black', linestyle='--', linewidth=2, label=f'Frontera y = {w}')
+plt.plot([0,1], [1,0], color='black', linestyle='-', linewidth=2)
 plt.scatter([t1x, t2x], [t1y, t2y], color='green', s=140, zorder=3)
+plt.plot([xe1], [ye1], marker='o', color='cyan', markersize=10, label='Equilibrio f1', zorder=4)
+if discriminante >= 0:
+    plt.plot([xe2_1, xe2_2], [ye2_1, ye2_2], marker='o', color='magenta', markersize=10, label='Equilibrio f2', zorder=4)
 plt.text(t1x, t1y, 'T1', color='green', fontsize=10, ha='center', va='bottom')
 plt.text(t2x, t2y, 'T2', color='green', fontsize=10, ha='center', va='bottom')
 plt.scatter(x0, y0, color='black', zorder=3)
