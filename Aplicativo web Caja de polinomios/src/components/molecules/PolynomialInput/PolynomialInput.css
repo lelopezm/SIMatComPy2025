@@ -1,0 +1,124 @@
+/* PolynomialInput Component Styles */
+.polynomial-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+}
+
+.polynomial-input__field {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  line-height: 1.4;
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-4);
+  transition: all var(--transition-normal);
+}
+
+.polynomial-input__field:focus {
+  background: var(--white);
+  border-color: var(--primary-color);
+  box-shadow: 
+    0 0 0 3px rgba(37, 99, 235, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.polynomial-input__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--success-color);
+}
+
+.polynomial-input__formatted {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--gray-800);
+  background-color: var(--white);
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--gray-200);
+  letter-spacing: 0.5px;
+}
+
+/* Estados de validación específicos */
+.polynomial-input .input--success {
+  border-color: var(--success-color);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, var(--white) 100%);
+}
+
+.polynomial-input .input--error {
+  border-color: var(--error-color);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, var(--white) 100%);
+}
+
+/* Animación para feedback visual */
+.polynomial-input__field {
+  position: relative;
+}
+
+.polynomial-input__field--valid::after {
+  content: '✓';
+  position: absolute;
+  right: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--success-color);
+  font-weight: bold;
+  font-size: var(--font-size-lg);
+}
+
+.polynomial-input__field--invalid::after {
+  content: '✗';
+  position: absolute;
+  right: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--error-color);
+  font-weight: bold;
+  font-size: var(--font-size-lg);
+}
+
+/* Efectos de escritura matemática */
+.polynomial-input__formatted sup {
+  font-size: 0.7em;
+  vertical-align: super;
+  color: var(--primary-color);
+}
+
+.polynomial-input__formatted .coefficient {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
+.polynomial-input__formatted .variable {
+  color: var(--primary-color);
+  font-style: italic;
+}
+
+.polynomial-input__formatted .operator {
+  color: var(--gray-600);
+  margin: 0 var(--spacing-1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .polynomial-input__field {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-3);
+  }
+  
+  .polynomial-input__formatted {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-2);
+  }
+}
