@@ -1,0 +1,201 @@
+/* OperationSelector Component Styles */
+.operation-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.operation-selector__header {
+  text-align: center;
+  margin-bottom: var(--spacing-4);
+}
+
+.operation-selector__title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-2);
+}
+
+.operation-selector__subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+.operation-selector__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+/* Operation Card Styles */
+.operation-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background-color: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+  width: auto;
+}
+
+.operation-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.operation-card--active {
+  border-color: var(--primary-color);
+  background-color: rgba(37, 99, 235, 0.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.operation-card--active .operation-card__symbol {
+  background-color: var(--primary-color);
+  color: var(--white);
+  transform: scale(1.1);
+}
+
+.operation-card__symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  border-radius: var(--border-radius-xl);
+  transition: all var(--transition-normal);
+  flex-shrink: 0;
+}
+
+.operation-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.operation-card__name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
+}
+
+.operation-card__description {
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Actions Section */
+.operation-selector__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background-color: var(--gray-50);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.operation-selector__calculate-btn {
+  width: auto;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Operation-specific styling */
+.operation-card[data-operation="addition"] .operation-card__symbol {
+  background: linear-gradient(135deg, var(--success-color), var(--secondary-color));
+  color: var(--white);
+}
+
+.operation-card[data-operation="subtraction"] .operation-card__symbol {
+  background: linear-gradient(135deg, var(--warning-color), #f97316);
+  color: var(--white);
+}
+
+.operation-card[data-operation="multiplication"] .operation-card__symbol {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: var(--white);
+}
+
+.operation-card[data-operation="division"] .operation-card__symbol {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: var(--white);
+}
+
+/* Disabled state */
+.operation-selector__actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Animation for selection */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.operation-card--active {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .operation-selector__grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+  
+  .operation-card {
+    padding: var(--spacing-3);
+    gap: var(--spacing-3);
+  }
+  
+  .operation-card__symbol {
+    width: 50px;
+    height: 50px;
+    font-size: var(--font-size-2xl);
+  }
+  
+  .operation-card__name {
+    font-size: var(--font-size-base);
+  }
+  
+  .operation-card__description {
+    font-size: var(--font-size-xs);
+  }
+  
+  .operation-selector__actions {
+    padding: var(--spacing-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .operation-selector__actions {
+    flex-direction: column;
+  }
+  
+  .operation-selector__actions button {
+    width: 100%;
+  }
+}

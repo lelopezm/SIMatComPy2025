@@ -1,0 +1,408 @@
+/* CartesianPlane Component Styles */
+.cartesian-plane {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.cartesian-plane__canvas {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid var(--gray-200);
+}
+
+.cartesian-plane__canvas > div {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+.cartesian-plane__canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  cursor: grab;
+  display: block !important;
+}
+
+.cartesian-plane__canvas canvas:active {
+  cursor: grabbing;
+}
+
+.cartesian-plane__controls {
+  padding: var(--spacing-3);
+  background-color: var(--gray-50);
+  border-top: 1px solid var(--gray-200);
+}
+
+.cartesian-plane__help {
+  font-size: var(--font-size-xs);
+  color: var(--gray-600);
+}
+
+.cartesian-plane__help strong {
+  color: var(--gray-800);
+  font-weight: 600;
+}
+
+.cartesian-plane__help ul {
+  list-style: none;
+  padding-left: 0;
+  margin: var(--spacing-1) 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+}
+
+.cartesian-plane__help li {
+  position: relative;
+  padding-left: var(--spacing-3);
+}
+
+.cartesian-plane__help li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Zoom controls overlay styles */
+.zoom-controls {
+  position: absolute;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  z-index: 10;
+}
+
+.zoom-control-btn {
+  width: 32px;
+  height: 32px;
+  background-color: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: var(--font-size-lg);
+  color: var(--gray-700);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.zoom-control-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+/* State info overlay styles */
+.state-info {
+  position: absolute;
+  top: var(--spacing-4);
+  left: var(--spacing-4);
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  font-size: var(--font-size-xs);
+  color: var(--gray-700);
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.state-info h4 {
+  margin: 0 0 var(--spacing-2) 0;
+  font-size: var(--font-size-sm);
+  color: var(--gray-900);
+  font-weight: 600;
+}
+
+.state-info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-1);
+  gap: var(--spacing-2);
+}
+
+.state-info-label {
+  font-weight: 500;
+}
+
+.state-info-value {
+  font-family: var(--font-family-mono);
+  color: var(--primary-color);
+}
+
+/* Polynomial chip styles */
+.polynomial-chip {
+  position: absolute;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.polynomial-chip:hover {
+  transform: scale(1.1);
+  z-index: 5;
+}
+
+.polynomial-chip--dragging {
+  z-index: 10;
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+.polynomial-chip--x2 {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+}
+
+.polynomial-chip--x {
+  background: linear-gradient(135deg, var(--success-color), var(--secondary-dark));
+}
+
+.polynomial-chip--constant {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* Quadrant highlighting */
+.quadrant-overlay {
+  position: absolute;
+  pointer-events: none;
+  border: 2px dashed transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.quadrant-overlay--positive {
+  border-color: var(--success-color);
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.quadrant-overlay--negative {
+  border-color: var(--error-color);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Animation for operations */
+@keyframes chipMove {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.1); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.polynomial-chip--animating {
+  animation: chipMove 0.5s ease-in-out;
+}
+
+@keyframes chipFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.polynomial-chip--appearing {
+  animation: chipFadeIn 0.3s ease-out;
+}
+
+@keyframes chipFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+.polynomial-chip--disappearing {
+  animation: chipFadeOut 0.3s ease-in;
+}
+
+/* Grid customization */
+.cartesian-plane--show-grid .grid-line {
+  stroke: var(--grid-color);
+  stroke-width: 1;
+}
+
+.cartesian-plane--hide-grid .grid-line {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cartesian-plane__canvas canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .cartesian-plane__help ul {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+  
+  .state-info {
+    font-size: 10px;
+    padding: var(--spacing-2);
+  }
+  
+  .zoom-control-btn {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  .cartesian-plane__controls {
+    padding: var(--spacing-2);
+  }
+  
+  .cartesian-plane__help {
+    font-size: 10px;
+  }
+  
+  .state-info {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-bottom: var(--spacing-2);
+    background-color: var(--white);
+    backdrop-filter: none;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .polynomial-chip,
+  .zoom-control-btn {
+    transition: none;
+  }
+  
+  .polynomial-chip--animating,
+  .polynomial-chip--appearing,
+  .polynomial-chip--disappearing {
+    animation: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .cartesian-plane {
+    border: 2px solid var(--gray-900);
+  }
+  
+  .polynomial-chip {
+    border: 2px solid var(--gray-900);
+  }
+  
+  .zoom-control-btn {
+    border: 2px solid var(--gray-900);
+  }
+}
+
+/* Estilos responsivos adicionales para el canvas */
+.cartesian-plane--fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.cartesian-plane--fullscreen .cartesian-plane__controls {
+  display: none;
+}
+
+/* Asegurar que el contenedor padre permita flexibilidad */
+.cartesian-plane-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Optimizaciones para pantallas grandes */
+@media (min-width: 1200px) {
+  .cartesian-plane {
+    min-height: 500px;
+  }
+  
+  .cartesian-plane__canvas {
+    min-height: 450px;
+  }
+}
+
+/* Optimizaciones para tablets en landscape */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .cartesian-plane {
+    min-height: 350px;
+  }
+  
+  .cartesian-plane__canvas {
+    min-height: 300px;
+  }
+  
+  .cartesian-plane__controls {
+    padding: var(--spacing-2);
+  }
+}
+
+/* Asegurar que el canvas se redimensione correctamente */
+@media (max-width: 768px) {
+  .cartesian-plane {
+    min-height: 300px;
+    border-radius: var(--border-radius-md);
+  }
+  
+  .cartesian-plane__canvas {
+    min-height: 250px;
+    border-radius: var(--border-radius-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .cartesian-plane {
+    min-height: 250px;
+    border-radius: var(--border-radius-sm);
+  }
+  
+  .cartesian-plane__canvas {
+    min-height: 200px;
+  }
+  
+  .cartesian-plane__canvas canvas {
+    border-radius: var(--border-radius-xs);
+  }
+}

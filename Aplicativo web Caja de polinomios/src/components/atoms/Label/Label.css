@@ -1,0 +1,127 @@
+/* Label Component Styles */
+.label {
+  display: inline-block;
+  font-family: var(--font-family-primary);
+  font-weight: 500;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.label:hover {
+  color: var(--gray-900);
+}
+
+/* Variants */
+.label--default {
+  color: var(--gray-700);
+}
+
+.label--primary {
+  color: var(--primary-color);
+}
+
+.label--secondary {
+  color: var(--secondary-color);
+}
+
+.label--math {
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+  color: var(--gray-800);
+  letter-spacing: 0.5px;
+}
+
+.label--error {
+  color: var(--error-color);
+}
+
+.label--success {
+  color: var(--success-color);
+}
+
+/* Sizes */
+.label--small {
+  font-size: var(--font-size-xs);
+}
+
+.label--medium {
+  font-size: var(--font-size-sm);
+}
+
+.label--large {
+  font-size: var(--font-size-base);
+}
+
+/* Required indicator */
+.label__required {
+  color: var(--error-color);
+  margin-left: var(--spacing-1);
+  font-weight: 600;
+}
+
+/* Special variants for mathematical contexts */
+.label--operation {
+  background-color: var(--gray-100);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--border-radius);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  border: 1px solid var(--gray-200);
+}
+
+.label--quadrant {
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.label--quadrant.label--positive {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
+}
+
+.label--quadrant.label--negative {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--error-color);
+  border: 1px solid var(--error-color);
+}
+
+/* Interactive states */
+.label--interactive {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.label--interactive:hover {
+  color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.label--interactive:active {
+  transform: translateY(0);
+}
+
+/* Disabled state */
+.label--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--gray-400);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .label {
+    font-size: var(--font-size-xs);
+  }
+  
+  .label--large {
+    font-size: var(--font-size-sm);
+  }
+}
