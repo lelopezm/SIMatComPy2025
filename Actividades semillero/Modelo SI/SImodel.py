@@ -167,15 +167,20 @@ U2, V2 = U2/N2, V2/N2  # Normalizar
 tiempo_max = 500
 
 # ----------- SIMULACIÓN CON CONMUTACIÓN MÚLTIPLE -------------
+pinta_sistema1 = False
+pinta_sistema2 = False
 puntos_iniciales = [
     #condicion inicial
     (0.55, 0.4),
     (0.3, 0.4),
-    (0.9, 0.1)   # puedes añadir más
+    (0.1,0.5),
+    (0.95, 0.28), #pasa por el punto tangente
 ]
 plt.figure(figsize=(10, 8))
 plt.streamplot(X1, Y1, U1, V1, color='red', linewidth=0.6, density=1.2)
 plt.streamplot(X2, Y2, U2, V2, color='blue', linewidth=0.6, density=1.2)
+
+n_cruces =0
 
 for idx, (x0, y0) in enumerate(puntos_iniciales):
     print(f"\n--- Trayectoria {idx+1} desde ({x0:.2f}, {y0:.2f}) ---")
@@ -184,44 +189,48 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
     tiempo_max = 50
     max_switches = 8  # Máximo número de cambios
     
+    sistema_actual = None  # Para rastrear el sistema actual usado
     # Marcar punto inicial
     plt.scatter(x0, y0, color='black', s=100, zorder=5)
     plt.text(x0+0.02, y0, f'CI{idx+1}', color='black', fontsize=10, ha='left', va='bottom')
-    
+   
     # BUCLE DE CONMUTACIÓN
     for switch_count in range(max_switches):
+       
         print(f"  Switch {switch_count+1}: Posición ({x_actual:.4f}, {y_actual:.4f})")
         
         # Determinar qué sistema usar en este caso usamos el sistema 1
         if y_actual < w:
+            sistema_actual = 1
             # Usar sistema 1 (región inferior)
             print(f"    -> Usando Sistema 1 (y < {w})")
             sol = simula_sistema1(x_actual, y_actual, tiempo_max)
             color_traj = 'darkred'
             system_name = 'Sistema 1'
-            # Esta condicion para que al graficar muchas trayectorias no aparezca "Sistema 1"
-            # repetido varias veces en la leyenda. El label solo aparece una vez.
-            label_traj = f'Sistema 1' if idx == 0 and switch_count == 0 else "" 
+            pinta_sistema1 = True
+            plt.plot(sol.y[0], sol.y[1], color=color_traj, linewidth=2.5, alpha=0.8)
         elif y_actual > w:
+            sistema_actual = 2
             print(f"    -> Usando Sistema 2 (y > {w})")
             sol = simula_sistema2(x_actual, y_actual, tiempo_max)
             color_traj = 'darkblue'
-            label_traj = f'Sistema 2' if idx == 0 and y_actual >= w and switch_count <= 1 else ""        
+            system_name = 'Sistema 2'
+            pinta_sistema2 = True
+            plt.plot(sol.y[0], sol.y[1], color=color_traj, linewidth=2.5, alpha=0.8)
         else:
             # Estamos exactamente en la frontera
             print("→ Exactamente en la frontera y = w")
             l, f1y, f2y = calcular_L(x_actual, w)
             print(f"  ℓ = {l:.6e}, f1_y = {f1y:.6e}, f2_y = {f2y:.6e}")
+            #break
+            
 
             
         # Verificar que la simulación produjo resultados
         if len(sol.y[0]) <= 1:
             print(f"    -> Simulación no produjo puntos suficientes. Terminando.")
             break
-            
-        # Graficar segmento de trayectoria
-        plt.plot(sol.y[0], sol.y[1], color=color_traj, linewidth=2.5, 
-                alpha=0.8, label=label_traj)
+
         print(f"    -> Graficado segmento con {len(sol.y[0])} puntos")
         
         # Verificar si hubo evento de conmutación (cruce de y = w)
@@ -242,19 +251,22 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
         # calcular l en ese punto (evaluado en y = w)   
             l, f1y,f2y = calcular_L(x_actual, w)
             print(f"    f1_2(y=w) = {f1y:.6e}, f2_2(y=w) = {f2y:.6e}, l = {l:.6e}")
-
+            
+            n_cruces += 1           
             plt.scatter(x_actual, y_actual, color='purple', s=80, zorder=7)
-            plt.text(x_actual+0.01, y_actual+0.02, f'S{switch_count+1}', color='purple')
+            plt.text(x_actual+0.01, y_actual+0.02, f'S{n_cruces}', color='purple')
 
             # Caso 1: l > 0 -> crossing (dejar que cruce)
             if l > 0:
                 print("    l > 0  -> Cruce. Continuamos en la otra región.")
                 # desplazar mínimamente para que integrador continúe en la región destino
                 eps = 1e-6
-                if y_actual >= w:
-                    y_actual = y_actual + eps
+                if sistema_actual == 1:
+                    y_actual = w + eps
+                    print(f"    Cruzando de Sistema 1 → Sistema 2")
                 else:
-                    y_actual = y_actual - eps
+                    y_actual = w - eps
+                    print(f"    Cruzando de Sistema 2 → Sistema 1")
                 
 
             # Caso 2: L < 0 -> sliding (deslizamiento)
@@ -266,7 +278,7 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
                 ts = sol_slide.t
 
                 # graficar la trayectoria sobre la frontera
-                plt.plot(xs, [w]*len(xs), color='orange', linewidth=2.5, linestyle='-', alpha=0.9, label='Deslizamiento' if switch_count==0 else "")
+                plt.plot(xs, [w]*len(xs), color='orange', linewidth=4, linestyle='-', alpha=0.9, label='Deslizamiento' if switch_count==0 else "")
 
                 # imprimir detalles
                 print(f"    Deslizamiento integrado con {len(xs)} puntos, tiempo final {ts[-1]:.3f}")
@@ -298,10 +310,10 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
                 tol = 1e-8
                 if abs(f1y_fin) < tol:
                     print("    Punto tangente T1 alcanzado.")
-                    plt.scatter(x_fin, w, color='lime', s=100, edgecolor='k', zorder=9)
+                    plt.scatter(x_fin, w, color='lime', s=100, edgecolor='k', zorder=9, label=' Pasa por T1')
                 if abs(f2y_fin) < tol:
                     print("    Punto tangente T2 alcanzado.")
-                    plt.scatter(x_fin, w, color='lime', s=100, edgecolor='k', zorder=9)
+                    plt.scatter(x_fin, w, color='lime', s=100, edgecolor='k', zorder=9, label=' Pasa por T2')
 
                 # Dar un pequeño empujón fuera de la frontera para que la siguiente integración no se quede pegada
                 eps = 1e-6
@@ -357,7 +369,12 @@ plt.plot([ax, t1x], [w, w], color='black', linestyle='--', linewidth=2)
 plt.plot([t1x, t2x], [w, w], color='black', linestyle='-', linewidth=2)
 plt.plot([t2x, bx], [w, w], color='black', linestyle='--', linewidth=2, label=f'Frontera y = {w}')
 plt.plot([0,1], [1,0], color='black', linestyle='-', linewidth=2)
-plt.scatter([t1x, t2x], [t1y, t2y], color='green', s=140, zorder=3)
+if pinta_sistema1:
+    plt.plot([], [], color='darkred', linewidth=2.5, label='Sistema 1')
+if pinta_sistema2:
+    plt.plot([], [], color='darkblue', linewidth=2.5, label='Sistema 2')
+plt.scatter([t1x], [t1y], color='green', s=140, zorder=3, label='Tangente T1')
+plt.scatter([t2x], [t2y], color='green', s=140, zorder=3, label='Tangente T2')
 plt.plot([xe1], [ye1], marker='o', color='cyan', markersize=10, label='Equilibrio f1', zorder=4)
 if discriminante >= 0:
     plt.plot([xe2_1, xe2_2], [ye2_1, ye2_2], marker='o', color='magenta', markersize=10, label='Equilibrio f2', zorder=4)
@@ -369,7 +386,7 @@ plt.xlim(ax, bx)
 plt.ylim(ay, by)
 plt.xlabel('Prey Population')
 plt.ylabel('Predator Population')   
-plt.title('Prey-Predator Model with Filippov Dynamics')
+plt.title('Filippov Dynamics')
 plt.legend(loc='lower left', bbox_to_anchor=(1.02, 0.02), borderaxespad=0, frameon=True)
 plt.grid()
 # Intentar maximizar la ventana de la figura

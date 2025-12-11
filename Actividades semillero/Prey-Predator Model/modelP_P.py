@@ -155,20 +155,26 @@ tiempo_max = 100
 # ----------- SIMULACIÓN CON CONMUTACIÓN MÚLTIPLE -------------
 puntos_iniciales = [
     #condicion inicial
-    (1.15, 1.59),
-    (0.1, 1.25),
-    (-0.45, 1.50)   # puedes añadir más
+    #(1.15, 1.59),
+    #(0.1, 1.25),
+    (0.5, 0.3),
+    #(-0.45, 1.50), 
+    
 ]
 plt.figure(figsize=(10, 8))
 plt.streamplot(X1, Y1, U1, V1, color='red', linewidth=0.6, density=1.2)
 plt.streamplot(X2, Y2, U2, V2, color='blue', linewidth=0.6, density=1.2)
 
+
+n_cruces = 0  # Contador de cruces de frontera para esta trayectoria
 for idx, (x0, y0) in enumerate(puntos_iniciales):
     print(f"\n--- Trayectoria {idx+1} desde ({x0:.2f}, {y0:.2f}) ---")
     
     x_actual, y_actual = x0, y0
     tiempo_max = 50
     max_switches = 8  # Máximo número de cambios
+    
+    sistema_actual = None  # Para rastrear el sistema anterior usado
     
     # Marcar punto inicial
     plt.scatter(x0, y0, color='black', s=100, zorder=5)
@@ -180,6 +186,7 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
         
         # Determinar qué sistema usar en este caso usamos el sistema 1
         if y_actual < w:
+            sistema_actual = 1
             # Usar sistema 1 (región inferior)
             print(f"    -> Usando Sistema 1 (y < {w})")
             sol = simula_sistema1(x_actual, y_actual, tiempo_max)
@@ -189,6 +196,8 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
             # repetido varias veces en la leyenda. El label solo aparece una vez.
             label_traj = f'Sistema 1' if idx == 0 and switch_count == 0 else "" 
         elif y_actual > w:
+            sistema_actual = 2
+            # Usar sistema 2 (región superior)
             print(f"    -> Usando Sistema 2 (y > {w})")
             sol = simula_sistema2(x_actual, y_actual, tiempo_max)
             color_traj = 'darkblue'
@@ -198,6 +207,7 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
             print("→ Exactamente en la frontera y = w")
             l, f1y, f2y = calcular_L(x_actual, w)
             print(f"  ℓ = {l:.6e}, f1_y = {f1y:.6e}, f2_y = {f2y:.6e}")
+            #break
 
             
         # Verificar que la simulación produjo resultados
@@ -229,18 +239,29 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
             l, f1y,f2y = calcular_L(x_actual, w)
             print(f"    f1_2(y=w) = {f1y:.6e}, f2_2(y=w) = {f2y:.6e}, l = {l:.6e}")
 
+            n_cruces += 1
             plt.scatter(x_actual, y_actual, color='purple', s=80, zorder=7)
-            plt.text(x_actual+0.01, y_actual+0.02, f'S{switch_count+1}', color='purple')
+            plt.text(x_actual+0.01, y_actual+0.02, f'S{n_cruces}', color='purple')
 
             # Caso 1: l > 0 -> crossing (dejar que cruce)
-            if l > 0:
+            """if l > 0:
                 print("    l > 0  -> Cruce. Continuamos en la otra región.")
                 # desplazar mínimamente para que integrador continúe en la región destino
                 eps = 1e-6
                 if y_actual >= w:
-                    y_actual = y_actual + eps
-                else:
                     y_actual = y_actual - eps
+                else:
+                    y_actual = y_actual + eps"""
+                    
+            if l > 0:
+                print("    l > 0  -> Cruce. Continuamos en la otra región.")
+                eps = 1e-6
+                if sistema_actual == 1:
+                # Veníamos de y < w, vamos a y > w
+                    y_actual = w + eps
+                else:  # sistema_actual == 2
+                # Veníamos de y > w, vamos a y < w
+                     y_actual = w - eps
                 
 
             # Caso 2: L < 0 -> sliding (deslizamiento)
@@ -252,7 +273,7 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
                 ts = sol_slide.t
 
                 # graficar la trayectoria sobre la frontera
-                plt.plot(xs, [w]*len(xs), color='orange', linewidth=2.5, linestyle='-', alpha=0.9, label='Deslizamiento' if switch_count==0 else "")
+                plt.plot(xs, [w]*len(xs), color='orange', linewidth=4, linestyle='-', alpha=0.9, label='Deslizamiento' if switch_count==0 else "")
 
                 # imprimir detalles
                 print(f"    Deslizamiento integrado con {len(xs)} puntos, tiempo final {ts[-1]:.3f}")
@@ -328,6 +349,8 @@ for idx, (x0, y0) in enumerate(puntos_iniciales):
         if x_actual < ax or x_actual > bx or y_actual < ay or y_actual > by:
             print("  Trayectoria salió de los límites. Terminando.")
             break
+        
+        
         
         
         
