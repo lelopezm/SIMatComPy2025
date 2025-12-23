@@ -1,0 +1,162 @@
+/* App Component Styles */
+.app {
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* Animación de carga para la aplicación */
+.app--loading {
+  position: relative;
+}
+
+.app--loading::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: appLoadingFadeOut 0.5s ease-out 1s forwards;
+}
+
+.app--loading::after {
+  content: 'Cargando Caja de Polinomios...';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--primary-color);
+  z-index: 10000;
+  animation: appLoadingFadeOut 0.5s ease-out 1s forwards;
+}
+
+@keyframes appLoadingFadeOut {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Estilos para modo oscuro (futuro) */
+.app--dark {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --white: #2d2d2d;
+  --gray-50: #404040;
+  --gray-100: #525252;
+  --gray-200: #737373;
+  --gray-300: #a3a3a3;
+  --gray-400: #d4d4d4;
+  --gray-500: #e5e5e5;
+  --gray-600: #f5f5f5;
+  --gray-700: #fafafa;
+  --gray-800: #fdfdfd;
+  --gray-900: #ffffff;
+}
+
+/* Estados de la aplicación */
+.app--error {
+  background-color: #fef2f2;
+}
+
+.app--success {
+  background-color: #f0fdf4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .app--loading::before,
+  .app--loading::after {
+    animation: none;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Print styles */
+@media print {
+  .app {
+    background-color: white;
+    color: black;
+  }
+}
+
+/* Focus management */
+.app:focus-within {
+  outline: none;
+}
+
+/* Error boundary styles */
+.app__error-boundary {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  text-align: center;
+  background-color: #fef2f2;
+}
+
+.app__error-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: #dc2626;
+  margin: 0 0 var(--spacing-4) 0;
+}
+
+.app__error-message {
+  font-size: var(--font-size-lg);
+  color: #7f1d1d;
+  margin: 0 0 var(--spacing-6) 0;
+  max-width: 600px;
+}
+
+.app__error-actions {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .app {
+    background-color: white;
+    color: black;
+  }
+  
+  .app--dark {
+    background-color: black;
+    color: white;
+  }
+}

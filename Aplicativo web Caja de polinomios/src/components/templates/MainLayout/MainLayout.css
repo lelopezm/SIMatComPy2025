@@ -1,0 +1,223 @@
+/* MainLayout Component Styles */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--gray-50);
+  overflow: hidden;
+}
+
+.main-layout__navbar {
+  flex: 0 0 var(--navbar-height);
+  z-index: var(--z-sticky);
+  background-color: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.main-layout__container {
+  display: flex;
+  flex: 1;
+  position: relative;
+  height: calc(100vh - var(--navbar-height));
+  overflow: hidden;
+}
+
+.main-layout__sidebar {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
+  z-index: var(--z-modal);
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.main-layout__sidebar--visible {
+  transform: translateX(0);
+}
+
+.main-layout__content {
+  flex: 1;
+  padding: var(--spacing-4);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  overflow: hidden;
+  width: 100%;
+}
+
+.main-layout__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: var(--z-modal-backdrop);
+  opacity: 0;
+  animation: overlayFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-layout__sidebar {
+    width: 280px; /* Sidebar más estrecho en tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .main-layout__sidebar {
+    width: 100vw; /* Ancho completo en móvil */
+  }
+  
+  .main-layout__content {
+    padding: var(--spacing-3);
+    gap: var(--spacing-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-layout__content {
+    padding: var(--spacing-2);
+    gap: var(--spacing-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-layout__sidebar {
+    width: 100vw;
+    max-width: none;
+  }
+  
+  .main-layout__content {
+    padding: var(--spacing-2);
+    gap: var(--spacing-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-layout__sidebar {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .main-layout__content {
+    padding: var(--spacing-3);
+    gap: var(--spacing-4);
+  }
+}
+
+/* Estados especiales */
+.main-layout--fullscreen .main-layout__sidebar {
+  transform: translateX(-100%);
+}
+
+.main-layout--fullscreen .main-layout__content {
+  margin-left: 0;
+  padding: 0;
+}
+
+.main-layout--presentation {
+  background-color: var(--gray-900);
+}
+
+.main-layout--presentation .main-layout__content {
+  background-color: var(--gray-900);
+  color: var(--white);
+}
+
+/* Animaciones de entrada */
+.main-layout__content {
+  opacity: 0;
+  animation: contentFadeIn 0.5s ease-out 0.2s forwards;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus management */
+.main-layout:focus-within .main-layout__sidebar--visible {
+  box-shadow: var(--shadow-xl);
+}
+
+/* Print styles */
+@media print {
+  .main-layout__navbar,
+  .main-layout__sidebar,
+  .main-layout__overlay {
+    display: none;
+  }
+  
+  .main-layout__content {
+    margin-left: 0;
+    padding: 0;
+    min-height: auto;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .main-layout {
+    background-color: var(--white);
+  }
+  
+  .main-layout__container {
+    border: 2px solid var(--gray-900);
+  }
+  
+  .main-layout__overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .main-layout__sidebar,
+  .main-layout__content {
+    transition: none;
+  }
+  
+  .main-layout__content {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .main-layout__overlay {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Dark mode support (for future enhancement) */
+@media (prefers-color-scheme: dark) {
+  .main-layout {
+    background-color: var(--gray-900);
+  }
+  
+  .main-layout__content {
+    background-color: var(--gray-900);
+    color: var(--gray-100);
+  }
+}

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja de Polinomios - Aprende Álgebra Visualmente</title>
+    
+    <!-- CSS Styles - Atomic Design Structure -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/atoms/buttons.css">
+    <link rel="stylesheet" href="css/atoms/inputs.css">
+    <link rel="stylesheet" href="css/atoms/labels.css">
+    <link rel="stylesheet" href="css/molecules/polynomial-input.css">
+    <link rel="stylesheet" href="css/molecules/operation-selector.css">
+    <link rel="stylesheet" href="css/molecules/help-tooltip.css">
+    <link rel="stylesheet" href="css/organisms/sidebar.css">
+    <link rel="stylesheet" href="css/organisms/navbar.css">
+    <link rel="stylesheet" href="css/organisms/cartesian-plane.css">
+    <link rel="stylesheet" href="css/templates/main-layout.css">
+    
+    <!-- p5.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+</head>
+<body>
+    <div id="app" class="main-layout">
+        <!-- Navbar Organism -->
+        <nav id="navbar" class="navbar">
+            <div class="navbar-content">
+                <button id="sidebar-toggle" class="btn btn-icon" aria-label="Toggle Sidebar">
+                    <span class="icon">☰</span>
+                </button>
+                
+                <h1 class="navbar-title">📦 Caja de Polinomios</h1>
+                
+                <div class="navbar-actions">
+                    <button id="shapes-bank" class="btn btn-secondary">
+                        <span class="icon">🎯</span>
+                        Figuras
+                    </button>
+                    
+                    <button id="help-btn" class="btn btn-primary">
+                        <span class="icon">❓</span>
+                        Ayuda
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Sidebar Organism -->
+            <aside id="sidebar" class="sidebar">
+                <div class="sidebar-content">
+                    <h2 class="sidebar-title">Control de Polinomios</h2>
+                    
+                    <!-- Polynomial Input Molecule -->
+                    <div class="polynomial-input-container">
+                        <label for="polynomial-input" class="label label-primary">Ingresa tu polinomio:</label>
+                        <input type="text" id="polynomial-input" class="input input-large" 
+                               placeholder="Ej: 2x² + 3x - 1" 
+                               aria-describedby="polynomial-help">
+                        <small id="polynomial-help" class="help-text">
+                            Usa ^ para exponentes: x^2, x^3, etc.
+                        </small>
+                    </div>
+
+                    <!-- Operation Selector Molecule -->
+                    <div class="operation-selector">
+                        <label class="label label-secondary">Selecciona operación:</label>
+                        <div class="operation-buttons">
+                            <button class="btn btn-operation" data-operation="addition">
+                                <span class="icon">➕</span>
+                                Suma
+                            </button>
+                            <button class="btn btn-operation" data-operation="subtraction">
+                                <span class="icon">➖</span>
+                                Resta
+                            </button>
+                            <button class="btn btn-operation" data-operation="multiplication">
+                                <span class="icon">✖️</span>
+                                Multiplicación
+                            </button>
+                            <button class="btn btn-operation" data-operation="division">
+                                <span class="icon">➗</span>
+                                División
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step by Step Controls -->
+                    <div class="step-controls">
+                        <button id="step-by-step" class="btn btn-success btn-large">
+                            <span class="icon">📋</span>
+                            Mostrar Pasos
+                        </button>
+                        
+                        <button id="clear-plane" class="btn btn-warning">
+                            <span class="icon">🗑️</span>
+                            Limpiar
+                        </button>
+                    </div>
+
+                    <!-- Shapes List -->
+                    <div class="shapes-list">
+                        <h3 class="label label-tertiary">Elementos en el plano:</h3>
+                        <ul id="shapes-list" class="shapes-items">
+                            <!-- Dynamic content will be added here -->
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Cartesian Plane Organism -->
+            <section id="cartesian-plane-container" class="cartesian-plane-container">
+                <div class="plane-controls">
+                    <button id="zoom-in" class="btn btn-icon" aria-label="Zoom In">
+                        <span class="icon">🔍+</span>
+                    </button>
+                    <button id="zoom-out" class="btn btn-icon" aria-label="Zoom Out">
+                        <span class="icon">🔍-</span>
+                    </button>
+                    <button id="reset-view" class="btn btn-icon" aria-label="Reset View">
+                        <span class="icon">🎯</span>
+                    </button>
+                </div>
+                <!-- p5.js canvas will be inserted here -->
+            </section>
+        </main>
+
+        <!-- Help Tooltip Molecule -->
+        <div id="help-tooltip" class="help-tooltip hidden">
+            <div class="tooltip-content">
+                <h3 class="tooltip-title">Ayuda Contextual</h3>
+                <p id="tooltip-text" class="tooltip-text">
+                    Información de ayuda aparecerá aquí según el contexto.
+                </p>
+                <button id="close-tooltip" class="btn btn-small">Cerrar</button>
+            </div>
+        </div>
+
+        <!-- Step by Step Modal -->
+        <div id="steps-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Solución Paso a Paso</h2>
+                    <button id="close-modal" class="btn btn-icon">×</button>
+                </div>
+                <div class="modal-body">
+                    <ol id="steps-list" class="steps-list">
+                        <!-- Steps will be dynamically added here -->
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript - Atomic Design Components -->
+    <script src="js/utils/polynomialParser.js"></script>
+    <script src="js/utils/regexPatterns.js"></script>
+    <script src="js/utils/operations.js"></script>
+    <script src="js/utils/p5Utils.js"></script>
+    
+    <!-- Atomic Components -->
+    <script src="js/atoms/Button.js"></script>
+    <script src="js/atoms/Input.js"></script>
+    <script src="js/atoms/Label.js"></script>
+    
+    <!-- Molecular Components -->
+    <script src="js/molecules/PolynomialInput.js"></script>
+    <script src="js/molecules/OperationSelector.js"></script>
+    <script src="js/molecules/HelpTooltip.js"></script>
+    
+    <!-- Organism Components -->
+    <script src="js/organisms/Sidebar.js"></script>
+    <script src="js/organisms/Navbar.js"></script>
+    <script src="js/organisms/CartesianPlane.js"></script>
+    
+    <!-- Templates -->
+    <script src="js/templates/MainLayout.js"></script>
+    
+    <!-- Main Application -->
+    <script src="js/sketch.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
