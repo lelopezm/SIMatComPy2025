@@ -10,10 +10,10 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
 # Defining the SImodel function
-def SEDO(v, t, b, g): # v: vector de variables dependientes
+def SEDO(v, t, beta, g): # v: vector de variables dependientes
     s, i = v
-    dsdt = -b*s*i
-    didt = b*s*i - g*i
+    dsdt = -beta*s*i
+    didt = beta*s*i - g*i
 
     return [dsdt, didt]
 
